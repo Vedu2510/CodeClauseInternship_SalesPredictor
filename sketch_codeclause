@@ -1,0 +1,37 @@
+import cv2
+import numpy as np
+
+def pencil_sketch(image_path):
+    # Load the image
+    image = cv2.imread(image_path)
+    
+    # Convert the image to grayscale
+    gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    
+    # Invert the grayscale image
+    inverted_image = cv2.bitwise_not(gray_image)
+    
+    # Apply Gaussian blur to the inverted image
+    blurred_image = cv2.GaussianBlur(inverted_image, (111, 111), 0)
+    
+    # Invert the blurred image
+    inverted_blurred_image = cv2.bitwise_not(blurred_image)
+    
+    # Create the pencil sketch effect by dividing the grayscale image by the inverted blurred image
+    pencil_sketch = cv2.divide(gray_image, inverted_blurred_image, scale=256.0)
+    
+    return pencil_sketch
+
+# Replace 'input_image.jpg' with the path to your input image
+input_image_path = 'input_image.jpg'
+
+sketch = pencil_sketch(input_image_path)
+
+# Save the sketch image
+cv2.imwrite('pencil_sketch.jpg', sketch)
+
+# Display the original and sketch images
+cv2.imshow('Original Image', cv2.imread(input_image_path))
+cv2.imshow('Pencil Sketch', sketch)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
