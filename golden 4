@@ -1,0 +1,40 @@
+import spacy
+
+# Load the spaCy English model
+nlp = spacy.load('en_core_web_sm')
+
+# Sample CV text (replace with actual CV text)
+cv_text = """
+I am a detail-oriented and organized software engineer with a passion for coding. I enjoy working in teams and solving complex problems. In my free time, I like to read books and go hiking.
+"""
+
+# Define a basic set of personality traits and associated keywords
+personality_traits = {
+    'Detail-Oriented': ['detail-oriented', 'organized'],
+    'Team Player': ['team', 'working in teams'],
+    'Problem Solver': ['solve', 'complex problems'],
+    'Adventurous': ['hiking', 'exploring', 'adventure'],
+}
+
+# Initialize trait scores
+trait_scores = {trait: 0 for trait in personality_traits}
+
+# Process the CV text using spaCy
+doc = nlp(cv_text)
+
+# Analyze the CV text for personality trait keywords
+for token in doc:
+    for trait, keywords in personality_traits.items():
+        if any(keyword in token.text.lower() for keyword in keywords):
+            trait_scores[trait] += 1
+
+# Determine the most dominant personality trait(s)
+dominant_traits = [trait for trait, score in trait_scores.items() if score > 0]
+
+# Display the results
+print("Dominant Personality Traits:")
+if dominant_traits:
+    for trait in dominant_traits:
+        print(f"- {trait}")
+else:
+    print("None detected.")
